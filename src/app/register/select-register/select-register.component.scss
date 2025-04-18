@@ -1,0 +1,92 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.account-type-container {
+  font-family: 'Arial', sans-serif;
+  background-color: $gris-suave;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+
+  .logo {
+    background-color: $verde-principal;
+    color: $blanco;
+    width: 100%;
+    text-align: center;
+    padding: 30px 0;
+    font-size: 2.2rem;
+    font-weight: bold;
+    border-bottom: 4px solid $negro;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin: 25px 0 10px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: $gris-texto;
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 400px;
+  }
+
+  .account-cards {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px 40px;
+
+    .account-card {
+      background-color: $verde-principal;
+      border: 2px solid $negro;
+      border-radius: 20px;
+      padding: 25px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        h2 {
+          font-size: 1.3rem;
+          color: $blanco;
+          margin-bottom: 10px;
+        }
+      }
+
+      .card-content {
+        p {
+          font-size: 0.95rem;
+          color: $blanco;
+        }
+      }
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: $gris-texto;
+
+      a {
+        color: $gris-texto;
+        text-decoration: underline;
+
+        &:hover {
+          color: $verde-principal;
+        }
+      }
+    }
+  }
+}

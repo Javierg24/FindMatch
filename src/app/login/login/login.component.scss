@@ -1,0 +1,116 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.login {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: $blanco;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .logo {
+    background-color: $verde-principal;
+    color: $blanco;
+    width: 100%;
+    text-align: center;
+    padding: 30px 0;
+    font-size: 2.2rem;
+    font-weight: bold;
+    border-bottom: 4px solid $negro;
+  }
+
+  .login-wrapper {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 30px;
+    text-align: center;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+
+      input {
+        padding: 12px 16px;
+        border: 2px solid $negro;
+        border-radius: 999px;
+        font-size: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+
+        &::placeholder {
+          color: $gris-texto;
+        }
+      }
+
+      .password-wrapper {
+        position: relative;
+        display: flex;
+
+        input[type="password"],
+        input[type="text"] {
+          flex: 1;
+        }
+
+        button.toggle-password {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background-color: $verde-principal;
+          border: none;
+          color: $blanco;
+          padding: 6px 10px;
+          border-radius: 999px;
+          font-size: 0.8rem;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $verde-oscuro;
+          }
+        }
+      }
+
+      button.submit-btn,
+      button.register-btn {
+        background-color: $verde-principal;
+        color: $blanco;
+        border: 2px solid $negro;
+        border-radius: 999px;
+        padding: 14px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: $verde-oscuro;
+        }
+      }
+
+      button.register-btn {
+        background-color: darken($verde-principal, 10%);
+      }
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: $gris-texto;
+
+      a {
+        color: $gris-texto;
+        text-decoration: underline;
+
+        &:hover {
+          color: $verde-principal;
+        }
+      }
+    }
+  }
+}

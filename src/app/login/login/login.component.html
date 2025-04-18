@@ -1,0 +1,20 @@
+<div class="login">
+  <div class="logo">FINDMATCH</div>
+  <div class="login-wrapper">
+    <form (ngSubmit)="onSubmit()">
+      <input type="email" formControlName="email" placeholder="Dirección de correo" />
+
+      <div class="password-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" />
+        <button type="button" class="toggle-password" (click)="togglePassword()">Mostrar</button>
+      </div>
+
+      <button type="submit" class="submit-btn">INICIAR SESIÓN</button>
+      <button type="button" class="register-btn" routerLink="/selectRegister">REGISTRARSE</button>
+    </form>
+
+    <div class="footer">
+      Términos de uso · <a href="#">Política de Privacidad</a>
+    </div>
+  </div>
+</div>

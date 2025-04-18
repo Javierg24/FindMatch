@@ -1,0 +1,29 @@
+<div class="register">
+  <div class="logo">FINDMATCH</div>
+
+  <div class="register-wrapper">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <input type="text" formControlName="username" placeholder="Nombre de usuario" />
+      <input type="text" formControlName="name" placeholder="Nombre" />
+      <input type="text" formControlName="surname" placeholder="Apellidos" />
+      <input type="email" formControlName="email" placeholder="Dirección de correo" />
+
+      <div class="password-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" />
+        <button type="button" class="toggle-password" (click)="togglePassword()">mostrar</button>
+      </div>
+
+      <div class="password-wrapper">
+        <input [type]="showConfirm ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirmar Contraseña" />
+        <button type="button" class="toggle-password" (click)="toggleConfirm()">mostrar</button>
+      </div>
+
+      <button type="submit" class="submit-btn">CREAR CUENTA</button>
+    </form>
+
+    <div class="footer">
+      Términos de uso · <a href="#">Política de Privacidad</a>
+    </div>
+    
+  </div>
+</div>
