@@ -10,6 +10,7 @@ import {RegisterUserComponent  } from './register/register-user/register-user.co
 import{ SelectRegisterComponent} from './register/select-register/select-register.component';
 import {RegisterRefereeComponent} from './register/register-referee/register-referee.component';
 import { RegisterSportCenterComponent } from './register/register-sport-center/register-sport-center.component';
+import { ProfileComponent } from './Players/Profile/profile/profile.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -17,7 +18,9 @@ const routes: Routes = [
   { path: 'registerUser', component: RegisterUserComponent},
   { path: 'registerReferee', component: RegisterRefereeComponent},
   { path: 'registerSportCentre', component: RegisterSportCenterComponent},
-  { path: 'selectRegister', component: SelectRegisterComponent}
+  { path: 'selectRegister', component: SelectRegisterComponent},
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
+
 ];
 
 @NgModule({

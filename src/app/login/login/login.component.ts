@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthServiceService } from '../../services/loginService/auth-service.service';
 import { Router } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 
@@ -11,28 +12,46 @@ import { Meta, Title } from '@angular/platform-browser';
 export class LoginComponent {
   loginForm: FormGroup;
   loginMessage: string = '';
+  errorMessage: string = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthServiceService, private router: Router,private meta: Meta,
+    private title: Title,) {
+    //Meta y título
+    this.title.setTitle('Login');
+    this.meta.updateTag({ name: 'description', content: 'Página de login de usuarios' });
+    this.meta.updateTag({ name: 'keywords', content: 'Login de usuarios' });
+
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['', [Validators.required, Validators.email]], // Validación de email
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[A-Z])(?=.*\d).*$/) // Al menos una mayúscula y un número
+      ]]
     });
   }
 
   onSubmit(): void {
-    const { email, password } = this.loginForm.value;
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
 
-    if (email === 'correo@example.com' && password === '123456') {
-      this.loginMessage = 'Inicio de sesión exitoso!';
-      // redireccionar o guardar sesión
+      // Llamada al servicio de login
+      this.authService.login(email, password).subscribe({
+        next: (response) => {
+          // Si la respuesta es exitosa, redirige al usuario
+          if (response.mensaje === 'Login exitoso') {
+            localStorage.setItem('user', JSON.stringify(response.usuario)); // Suponiendo que response.usuario contiene el usuario
+            this.router.navigate(['/src/app/Players/Profile/profile']);
+          } else {
+            this.errorMessage = 'Correo o contraseña incorrectos';
+          }
+        },
+        error: (error) => {
+          this.errorMessage = 'Hubo un error al intentar iniciar sesión. Por favor, inténtelo de nuevo más tarde.';
+        }
+      });
     } else {
-      this.loginMessage = 'Correo o contraseña incorrectos.';
+      alert('Formulario inválido. Revisa los campos.');
     }
-  }
-
-  signInWithGoogle(): void {
-    // Aquí puedes integrar Firebase Authentication con Google
-    console.log('Integrar Firebase Auth para Google');
   }
 
   showPassword: boolean = false;

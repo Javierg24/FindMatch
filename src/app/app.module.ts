@@ -11,6 +11,10 @@ import { RegisterUserComponent } from './register/register-user/register-user.co
 import { RegisterRefereeComponent } from './register/register-referee/register-referee.component';
 import { RegisterSportCenterComponent } from './register/register-sport-center/register-sport-center.component';
 import { SelectRegisterComponent } from './register/select-register/select-register.component';
+import { TeamInfoComponent } from './Players/Teams/team-info/team-info.component';
+import { ProfileComponent } from './Players/Profile/profile/profile.component';
+import { HeaderComponent } from './partials/header/header.component';
+import { FooterComponent } from './partials/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,11 @@ import { SelectRegisterComponent } from './register/select-register/select-regis
     RegisterUserComponent,
     RegisterRefereeComponent,
     RegisterSportCenterComponent,
-    SelectRegisterComponent
+    SelectRegisterComponent,
+    TeamInfoComponent,
+    ProfileComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     FormsModule,
