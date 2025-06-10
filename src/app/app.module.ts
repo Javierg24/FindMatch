@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login/login.component';
@@ -15,6 +14,13 @@ import { TeamInfoComponent } from './Players/Teams/team-info/team-info.component
 import { ProfileComponent } from './Players/Profile/profile/profile.component';
 import { HeaderComponent } from './partials/header/header.component';
 import { FooterComponent } from './partials/footer/footer.component';
+import { MatchesComponent } from './Players/Matches/matches/matches.component';
+import { StoreComponent } from './Players/Store/store/store.component';
+import { TeamComponent } from './Players/Teams/team/team.component';
+import { SearchTeamComponent } from './Players/Teams/search-team/search-team.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { TermsOfServiceComponent } from './terms-of-service/terms-of-service.component';
+
 
 @NgModule({
   declarations: [
@@ -27,17 +33,23 @@ import { FooterComponent } from './partials/footer/footer.component';
     TeamInfoComponent,
     ProfileComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    MatchesComponent,
+    StoreComponent,
+    TeamComponent,
+    SearchTeamComponent,
+    PrivacyPolicyComponent,
+    TermsOfServiceComponent
   ],
   imports: [
-    FormsModule,
     BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
     CommonModule,
-    ReactiveFormsModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

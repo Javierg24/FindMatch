@@ -1,41 +1,113 @@
-<div class="perfil-container">
-  <h2 class="perfil-title">Perfil del Jugador</h2>
-  <div class="perfil-card">
-    <div class="perfil-item">
-      <span class="label">Nombre de usuario:</span>
-      <span class="value">{{ user.handle }}</span>
+<app-header></app-header>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <div *ngIf="!user.profileImage" class="avatar-placeholder">
+        No Image
+      </div>
+      <img [src]="user.profileImage || 'assets/default-avatar.png'" *ngIf="user.profileImage" alt="Avatar" class="avatar-image">
+      <button *ngIf="editMode" class="avatar-edit-btn" (click)="triggerFileInput()">
+        <i class="fas fa-camera"></i>
+      </button>
+      <!-- input oculto para seleccionar la imagen -->
+      <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden>
     </div>
-    <div class="perfil-item">
-      <span class="label">Nombre:</span>
-      <span class="value">{{ user.nombre }}</span>
+    <h2 class="profile-title">Perfil del Jugador</h2>
+  </div>
+
+  <div class="profile-content">
+    <!-- Sección de información editable -->
+    <div class="profile-section">
+      <h3 class="section-title">Información Personal</h3>
+      <div class="section-divider"></div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input *ngIf="editMode" [(ngModel)]="user.name" class="form-input">
+          <p *ngIf="!editMode" class="form-value">{{ user.name }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Apellido</label>
+          <input *ngIf="editMode" [(ngModel)]="user.surname" class="form-input">
+          <p *ngIf="!editMode" class="form-value">{{ user.surname }}</p>
+        </div>
+      </div>
     </div>
-    <div class="perfil-item">
-      <span class="label">Apellido:</span>
-      <span class="value">{{ user.apellido }}</span>
+
+    <!-- Sección de estadísticas -->
+    <div class="profile-section">
+      <h3 class="section-title">Estadísticas de Juego</h3>
+      <div class="section-divider"></div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Posición Principal</label>
+          <select *ngIf="editMode" [(ngModel)]="user.primary_position" class="form-input">
+            <option *ngFor="let pos of posiciones" [value]="pos">{{ pos }}</option>
+          </select>
+          <p *ngIf="!editMode" class="form-value">{{ user.primary_position }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Posición Secundaria</label>
+          <select *ngIf="editMode" [(ngModel)]="user.secondary_position" class="form-input">
+            <option *ngFor="let pos of posiciones" [value]="pos">{{ pos }}</option>
+          </select>
+          <p *ngIf="!editMode" class="form-value">{{ user.secondary_position || 'No especificada' }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Goles</label>
+          <input *ngIf="editMode" type="number" [(ngModel)]="user.goals" class="form-input">
+          <p *ngIf="!editMode" class="form-value">{{ user.goals || 0 }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Asistencias</label>
+          <input *ngIf="editMode" type="number" [(ngModel)]="user.assists" class="form-input">
+          <p *ngIf="!editMode" class="form-value">{{ user.assists || 0 }}</p>
+        </div>
+      </div>
     </div>
-    <div class="perfil-item">
-      <span class="label">Correo electrónico:</span>
-      <span class="value">{{ user.email }}</span>
+
+    <!-- Sección de información de cuenta -->
+    <div class="profile-section">
+      <h3 class="section-title">Información de Cuenta</h3>
+      <div class="section-divider"></div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre de usuario</label>
+          <p class="form-value">{{ user.handle }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <p class="form-value">{{ user.email }}</p>
+        </div>
+      </div>
     </div>
-    <div class="perfil-item">
-      <span class="label">1ª Posición:</span>
-      <span class="value">{{ user.posicion1 }}</span>
-    </div>
-    <div class="perfil-item">
-      <span class="label">2ª Posición:</span>
-      <span class="value">{{ user.posicion2 }}</span>
-    </div>
-    <div class="perfil-item">
-      <span class="label">Goles:</span>
-      <span class="value">{{ user.goles }}</span>
-    </div>
-    <div class="perfil-item">
-      <span class="label">Asistencias:</span>
-      <span class="value">{{ user.asistencias }}</span>
-    </div>
-    <div class="perfil-item">
-      <span class="label">Edad:</span>
-      <span class="value">{{ user.edad }}</span>
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <button *ngIf="!editMode" (click)="editProfile()" class="btn-edit">
+        <i class="fas fa-edit"></i> Editar Perfil
+      </button>
+
+      <div *ngIf="editMode" class="edit-actions">
+        <button (click)="saveProfile()" class="btn-save">
+          <i class="fas fa-save"></i> Guardar Cambios
+        </button>
+      </div>
+
+      <button (click)="logout()" class="btn-logout">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
     </div>
   </div>
 </div>
+
+<app-footer></app-footer>

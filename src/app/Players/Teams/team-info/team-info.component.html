@@ -1,1 +1,125 @@
+<app-header></app-header>
 
+<div class="team-container">
+
+  <!-- Sección de acciones principales -->
+  <div class="action-panel">
+    <div class="action-grid">
+      <div class="action-card create-team" (click)="openCreateTeamModal()">
+        <div class="action-icon">
+          <i class="fas fa-plus-circle"></i>
+        </div>
+        <h3>Crear Equipo</h3>
+        <p>Forma tu propio equipo y comienza a competir</p>
+      </div>
+
+      <div class="action-card search-teams" routerLink="/searchTeam">
+        <div class="action-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <h3>Buscar Equipos</h3>
+        <p>Encuentra equipos cerca de tu localidad</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de mis equipos -->
+  <div class="my-teams-section">
+    <div class="section-header">
+      <h2>Mis Equipos</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="teams-grid">
+      <div class="team-card" *ngFor="let equipo of equipos">
+        <div class="team-card-inner">
+          <div class="team-image-container">
+            <img
+              *ngIf="equipo.PICTURE"
+              [src]="'data:image/png;base64,' + equipo.PICTURE"
+              alt="{{ equipo.TEAM_NAME }}"
+              class="team-image"
+            />
+            <div *ngIf="!equipo.PICTURE" class="team-image-placeholder">
+              <i class="fas fa-users"></i>
+            </div>
+          </div>
+          <div class="team-info">
+            <h3>{{ equipo.TEAM_NAME }}</h3>
+            <div class="team-meta">
+              <span class="category-badge">{{ equipo.TEAM_TYPE }}</span>
+              <span class="location"><i class="fas fa-map-marker-alt"></i> {{ equipo.TEAM_ADDRESS }}</span>
+            </div>
+            <a [routerLink]="['/team', equipo.TEAM_ID]" class="view-team-btn">
+              Ver Detalles <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de creación de equipo -->
+<div
+  class="modal fade"
+  id="createTeamModal"
+  tabindex="-1"
+  aria-labelledby="createTeamModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crear Nuevo Equipo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="createTeam()" class="team-form">
+          <div class="form-group">
+            <label for="teamName">Nombre del Equipo</label>
+            <input
+              type="text"
+              id="teamName"
+              [(ngModel)]="newTeam.nombre"
+              name="nombre"
+              placeholder="Ingresa el nombre del equipo"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="teamCategory">Categoría</label>
+            <select
+              id="teamCategory"
+              [(ngModel)]="newTeam.categoria"
+              name="categoria"
+              required
+            >
+              <option value="" disabled selected>Selecciona una categoría</option>
+              <option value="5">Fútbol 5</option>
+              <option value="7">Fútbol 7</option>
+              <option value="11">Fútbol 11</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teamLocation">Localidad</label>
+            <select
+              id="teamLocation"
+              [(ngModel)]="newTeam.localidad"
+              name="localidad"
+              required
+            >
+              <option value="" disabled selected>Selecciona una localidad</option>
+              <option *ngFor="let localidad of localidades" [value]="localidad">{{ localidad }}</option>
+            </select>
+          </div>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-plus-circle"></i> Crear Equipo
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

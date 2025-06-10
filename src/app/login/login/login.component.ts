@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthServiceService } from '../../services/loginService/auth-service.service';
+import { AuthService } from '../../services/loginService/auth.service';
 import { Router } from '@angular/router';
-import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -11,53 +10,49 @@ import { Meta, Title } from '@angular/platform-browser';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  loginMessage: string = '';
   errorMessage: string = '';
+  showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthServiceService, private router: Router,private meta: Meta,
-    private title: Title,) {
-    //Meta y título
-    this.title.setTitle('Login');
-    this.meta.updateTag({ name: 'description', content: 'Página de login de usuarios' });
-    this.meta.updateTag({ name: 'keywords', content: 'Login de usuarios' });
-
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // Validación de email
-      password: ['', [
-        Validators.required,
-        Validators.pattern(/^(?=.*[A-Z])(?=.*\d).*$/) // Al menos una mayúscula y un número
-      ]]
+      email: ['', [Validators.required, Validators.email]],  // Validación para el email
+      password: ['', [Validators.required, Validators.minLength(6)]]  // Validación para la contraseña
     });
   }
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-
-      // Llamada al servicio de login
-      this.authService.login(email, password).subscribe({
-        next: (response) => {
-          // Si la respuesta es exitosa, redirige al usuario
-          if (response.mensaje === 'Login exitoso') {
-            localStorage.setItem('user', JSON.stringify(response.usuario)); // Suponiendo que response.usuario contiene el usuario
-            this.router.navigate(['/src/app/Players/Profile/profile']);
-          } else {
-            this.errorMessage = 'Correo o contraseña incorrectos';
-          }
-        },
-        error: (error) => {
-          this.errorMessage = 'Hubo un error al intentar iniciar sesión. Por favor, inténtelo de nuevo más tarde.';
-        }
-      });
-    } else {
-      alert('Formulario inválido. Revisa los campos.');
-    }
-  }
-
-  showPassword: boolean = false;
-
+  // Método para mostrar/ocultar la contraseña
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  // Método de inicio de sesión
+  login(): void {
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Por favor, completa todos los campos correctamente.';
+      return;
+    }
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          console.log('Login successful:', response);
+
+          // Guardar información del usuario si es necesario
+          localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem('userType', response.type);
+
+          // Redirigir a la página principal o dashboard
+          this.router.navigate(['/profile']);
+        } else {
+          this.errorMessage = response.message || 'Credenciales incorrectas. Inténtalo de nuevo.';
+        }
+      },
+      error: (error) => {
+        console.error('Error de login:', error);
+        this.errorMessage = 'Hubo un error al iniciar sesión. Inténtalo más tarde.';
+      }
+    });
+  }
 }

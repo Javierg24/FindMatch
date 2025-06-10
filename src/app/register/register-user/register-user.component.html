@@ -2,28 +2,52 @@
   <div class="logo">FINDMATCH</div>
 
   <div class="register-wrapper">
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+    <form [formGroup]="registerForm" (ngSubmit)="registerPlayer()">
       <input type="text" formControlName="username" placeholder="Nombre de usuario" />
       <input type="text" formControlName="name" placeholder="Nombre" />
       <input type="text" formControlName="surname" placeholder="Apellidos" />
       <input type="email" formControlName="email" placeholder="Dirección de correo" />
 
+      <label>Primera posicion</label>
+      <select formControlName="primaryPosition">
+        <option value="POR">POR</option>
+        <option value="DFC">DFC</option>
+        <option value="LD">LD</option>
+        <option value="LI">LI</option>
+        <option value="MC">MC</option>
+        <option value="DC">DC</option>
+        <option value="ED">ED</option>
+        <option value="EI">EI</option>
+      </select>
+      <label>Segunda posicion</label>
+      <select formControlName="secondaryPosition">
+        <option value="POR">POR</option>
+        <option value="DFC">DFC</option>
+        <option value="LD">LD</option>
+        <option value="LI">LI</option>
+        <option value="MC">MC</option>
+        <option value="DC">DC</option>
+        <option value="ED">ED</option>
+        <option value="EI">EI</option>
+      </select>
+
       <div class="password-wrapper">
         <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" />
-        <button type="button" class="toggle-password" (click)="togglePassword()">mostrar</button>
+        <button type="button" class="toggle-password" (click)="togglePassword()">👁️</button>
       </div>
 
       <div class="password-wrapper">
         <input [type]="showConfirm ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirmar Contraseña" />
-        <button type="button" class="toggle-password" (click)="toggleConfirm()">mostrar</button>
+        <button type="button" class="toggle-password" (click)="toggleConfirm()">👁️</button>
       </div>
 
-      <button type="submit" class="submit-btn">CREAR CUENTA</button>
+      <button type="submit" class="submit-btn" [disabled]="registerForm.invalid">CREAR CUENTA</button>
     </form>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <div class="footer">
       Términos de uso · <a href="#">Política de Privacidad</a>
     </div>
-    
   </div>
 </div>

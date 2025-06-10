@@ -1,1 +1,44 @@
-<p>header works!</p>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Logo con tipografía moderna -->
+    <a class="navbar-brand" routerLink="/teams">
+      <span class="logo-text">FINDMATCH</span>
+      <span class="logo-subtext">by FootballConnect</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/matches" routerLinkActive="active">
+            <i class="fas fa-calendar-alt nav-icon"></i>
+            <span class="nav-text">Partidos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teams" routerLinkActive="active">
+            <i class="fas fa-users nav-icon"></i>
+            <span class="nav-text">Equipos</span>
+          </a>
+        </li>
+        <!--
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/store" routerLinkActive="active">
+            <i class="fas fa-shopping-bag nav-icon"></i>
+            <span class="nav-text">Tienda</span>
+          </a>
+        </li>
+        -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/profile" routerLinkActive="active">
+            <i class="fas fa-user nav-icon"></i>
+            <span class="nav-text">Perfil</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

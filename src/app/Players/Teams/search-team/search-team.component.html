@@ -1,0 +1,87 @@
+<app-header></app-header>
+
+<div class="search-page">
+  <div class="search-container">
+    <!-- Cabecera con título -->
+    <div class="section-header">
+      <h2>Buscar Equipos</h2>
+      <div class="divider"></div>
+      <p class="section-description">Encuentra equipos cerca de ti y únete a la competencia</p>
+    </div>
+
+    <!-- Filtros de búsqueda -->
+    <div class="search-filters">
+      <div class="filter-group">
+        <i class="fas fa-search"></i>
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          [(ngModel)]="filtroNombre"
+          class="search-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <i class="fas fa-users"></i>
+        <select [(ngModel)]="filtroTipo" class="filter-select">
+          <option value="">Todos los tipos</option>
+          <option value="5">Fútbol 5</option>
+          <option value="7">Fútbol 7</option>
+          <option value="11">Fútbol 11</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Lista de equipos -->
+    <div class="teams-grid">
+      <div class="team-card" *ngFor="let equipo of equiposFiltrados">
+        <div class="team-card-inner">
+          <div class="team-image-container">
+            <img
+              *ngIf="equipo.PICTURE"
+              [src]="'data:image/png;base64,' + equipo.PICTURE"
+              alt="{{ equipo.TEAM_NAME }}"
+              class="team-image"
+            />
+            <div *ngIf="!equipo.PICTURE" class="team-image-placeholder">
+              <i class="fas fa-users"></i>
+            </div>
+          </div>
+          <div class="team-info">
+            <h3>{{ equipo.TEAM_NAME }}</h3>
+
+            <div class="team-meta">
+              <span class="category-badge">{{ equipo.TEAM_TYPE }} jugadores</span>
+              <span class="location">
+                <i class="fas fa-map-marker-alt"></i> {{ equipo.TEAM_ADDRESS }}
+              </span>
+            </div>
+
+            <div class="team-actions">
+              <a [routerLink]="['/team', equipo.TEAM_ID]" class="view-team-btn">
+                Ver Detalles <i class="fas fa-arrow-right"></i>
+              </a>
+
+              <div *ngIf="yaEsMiembro(equipo.TEAM_ID)" class="member-badge">
+                <i class="fas fa-check-circle"></i> Ya eres miembro
+              </div>
+
+              <button *ngIf="!yaEsMiembro(equipo.TEAM_ID)" class="join-btn" (click)="unirseEquipo(equipo.TEAM_ID)">
+                <i class="fas fa-user-plus"></i> Unirse al equipo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="equiposFiltrados.length === 0" class="no-results">
+      <i class="fas fa-search"></i>
+      <h3>No se encontraron equipos</h3>
+      <p>Intenta ajustar tus filtros de búsqueda</p>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

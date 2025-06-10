@@ -1,7 +1,7 @@
 <div class="login">
   <div class="logo">FINDMATCH</div>
   <div class="login-wrapper">
-    <form (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
       <input type="email" formControlName="email" placeholder="Dirección de correo" />
 
       <div class="password-wrapper">
@@ -9,12 +9,17 @@
         <button type="button" class="toggle-password" (click)="togglePassword()">Mostrar</button>
       </div>
 
-      <button type="submit" class="submit-btn">INICIAR SESIÓN</button>
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">INICIAR SESIÓN</button>
       <button type="button" class="register-btn" routerLink="/selectRegister">REGISTRARSE</button>
     </form>
 
     <div class="footer">
-      Términos de uso · <a href="#">Política de Privacidad</a>
+       <a href="termsOfService">Términos de uso</a> · <a href="privacyPolicy">Política de Privacidad</a>
     </div>
   </div>
 </div>

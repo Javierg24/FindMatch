@@ -1,0 +1,273 @@
+<app-header></app-header>
+
+<div class="matches-page">
+  <!-- Estado sin equipos -->
+  <div *ngIf="equipos.length === 0" class="empty-state">
+    <div class="empty-state-content">
+      <i class="fas fa-users-slash empty-icon"></i>
+      <h3>No tienes equipos registrados</h3>
+      <p>Únete o crea un equipo para comenzar a gestionar partidos</p>
+    </div>
+  </div>
+
+  <!-- Con equipos pero sin selección -->
+  <div *ngIf="equipos.length > 0" class="team-selection">
+    <div class="selection-card">
+      <h3><i class="fas fa-people-group"></i> Selecciona tu equipo</h3>
+      <p>Elige un equipo para gestionar sus partidos</p>
+
+      <div class="select-wrapper">
+        <select class="team-select" [(ngModel)]="selectedTeamId" (change)="onTeamSelect()">
+          <option value="" disabled>Selecciona un equipo</option>
+          <option *ngFor="let equipo of equipos" [value]="equipo.TEAM_ID">
+            {{ equipo.TEAM_NAME }} ({{ equipo.TEAM_TYPE }})
+          </option>
+        </select>
+        <i class="fas fa-chevron-down select-icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista principal con equipo seleccionado -->
+  <div *ngIf="equipos.length > 0" class="matches-container">
+    <!-- Header con acciones -->
+    <div class="matches-header">
+      <div class="header-content">
+        <h2><i class="fas fa-futbol"></i> Partidos de {{ nombreEquipoSeleccionado }}</h2>
+        <button class="create-match-btn" (click)="openCreateMatchModal()">
+          <i class="fas fa-plus"></i> Crear Partido
+        </button>
+      </div>
+
+      <!-- Menú de navegación -->
+      <nav class="matches-nav">
+        <button [class.active]="vistaSeleccionada === 'proximos'" (click)="vistaSeleccionada = 'proximos'">
+          <i class="fas fa-calendar-alt"></i> Próximos
+        </button>
+        <button [class.active]="vistaSeleccionada === 'historial'" (click)="vistaSeleccionada = 'historial'">
+          <i class="fas fa-history"></i> Historial
+        </button>
+        <button [class.active]="vistaSeleccionada === 'unirse'" (click)="vistaSeleccionada = 'unirse'">
+          <i class="fas fa-user-plus"></i> Unirse
+        </button>
+      </nav>
+    </div>
+
+    <!-- Contenido de partidos -->
+    <div class="matches-content">
+      <!-- Próximos partidos -->
+      <div *ngIf="vistaSeleccionada === 'proximos'" class="matches-section">
+        <h3 class="section-title">Próximos Partidos</h3>
+        <div *ngIf="proximosPartidos.length === 0" class="no-matches">
+          <i class="fas fa-calendar-times"></i>
+          <p>No hay partidos programados</p>
+        </div>
+
+        <div class="matches-grid">
+          <div *ngFor="let match of proximosPartidos" class="match-card">
+            <div class="match-header">
+              <span class="match-type">{{ match.TEAM_TYPE }} jugadores</span>
+              <span class="match-date">{{ match.MATCH_DATE_TIME }}</span>
+            </div>
+
+            <div class="match-teams">
+              <div class="team home-team">
+                <span class="team-name">{{ match.HOME_TEAM_NAME }}</span>
+                <span class="team-label">Local</span>
+              </div>
+
+              <div class="vs-separator">VS</div>
+
+              <div class="team away-team">
+                <span class="team-name">{{ match.AWAY_TEAM_NAME || 'Por definir' }}</span>
+                <span class="team-label">Visitante</span>
+              </div>
+            </div>
+
+            <div class="match-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ match.LOCATION }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-euro-sign"></i>
+                <span>{{ match.PRICE }} €</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-tag"></i>
+                <span>{{ match.PITCH_NAME }}</span>
+              </div>
+            </div>
+
+            <div *ngIf="capitanActual" class="match-actions">
+              <button class="action-btn cancel-btn" (click)="cancelarPartido(selectedTeamId!,match.MATCH_ID)">
+                <i class="fas fa-times"></i> Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial de partidos -->
+      <div *ngIf="vistaSeleccionada === 'historial'" class="matches-section">
+        <h3 class="section-title">Historial de Partidos</h3>
+        <div *ngIf="partidosHistorial.length === 0" class="no-matches">
+          <i class="fas fa-history"></i>
+          <p>No hay partidos en el historial</p>
+        </div>
+
+        <div class="matches-grid">
+          <div *ngFor="let match of partidosHistorial" class="match-card">
+            <div class="match-header">
+              <span class="match-type">{{ match.TEAM_TYPE }} jugadores</span>
+              <span class="match-date">{{ match.MATCH_DATE_TIME }}</span>
+            </div>
+
+            <div class="match-teams with-result">
+              <div class="team home-team">
+                <span class="team-name">{{ match.HOME_TEAM_NAME }}</span>
+                <span class="team-score">{{ match.HOME_GOALS }}</span>
+              </div>
+
+              <div class="vs-separator">-</div>
+
+              <div class="team away-team">
+                <span class="team-score">{{ match.AWAY_GOALS }}</span>
+                <span class="team-name">{{ match.AWAY_TEAM_NAME }}</span>
+              </div>
+            </div>
+
+            <div class="match-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ match.LOCATION }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-tag"></i>
+                <span>{{ match.PITCH_NAME }}</span>
+              </div>
+            </div>
+
+            <div class="match-actions">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partidos para unirse -->
+      <div *ngIf="vistaSeleccionada === 'unirse'" class="matches-section">
+        <h3 class="section-title">Partidos Disponibles</h3>
+        <div *ngIf="partidosParaUnirse.length === 0" class="no-matches">
+          <i class="fas fa-search"></i>
+          <p>No hay partidos disponibles para unirse</p>
+        </div>
+
+        <div class="matches-grid">
+          <div *ngFor="let match of partidosParaUnirse" class="match-card">
+            <div class="match-header">
+              <span class="match-type">{{ match.TEAM_TYPE }} jugadores</span>
+              <span class="match-date">{{match.MATCH_DATE_TIME }}</span>
+            </div>
+
+            <div class="match-teams">
+              <div class="team home-team">
+                <span class="team-name">{{ match.HOME_TEAM_NAME }}</span>
+                <span class="team-label">Busca rival</span>
+              </div>
+            </div>
+
+            <div class="match-details">
+              <div class="detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ match.LOCATION }}</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-euro-sign"></i>
+                <span>{{ match.PRICE }} €</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-tag"></i>
+                <span>{{ match.PITCH_NAME }}</span>
+              </div>
+            </div>
+
+            <div *ngIf="capitanActual" class="match-actions">
+              <button class="action-btn join-btn" (click)="unirseAPartido(selectedTeamId!, match.MATCH_ID)">
+                <i class="fas fa-user-plus"></i> Unirse
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de creación de partido -->
+<div class="modal fade" id="createMatchModal" tabindex="-1" #createMatchModal aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-plus-circle"></i> Crear Nuevo Partido</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form class="match-form">
+          <div class="form-group">
+            <label><i class="fas fa-people-group"></i> Equipo</label>
+            <select class="form-select" id="matchTeam" (change)="onTeamChange($event)">
+              <option value="" disabled selected>Selecciona tu equipo</option>
+              <option *ngFor="let equipo of equiposCapitan" [value]="equipo.TEAM_ID">
+                {{ equipo.TEAM_NAME }} ({{ equipo.TEAM_TYPE }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-calendar-day"></i> Fecha y Hora</label>
+            <div class="datetime-inputs">
+              <input type="date" id="matchDate" class="form-control">
+              <input type="time" id="matchTime" class="form-control" min="08:00" max="22:00" step="3600">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-map-marked-alt"></i> Instalación</label>
+            <select class="form-select" id="matchSportCentre" (change)="onSportCentreChange($event)">
+              <option value="" disabled selected>Selecciona un centro deportivo</option>
+              <option *ngFor="let sportCentre of sportCentres" [value]="sportCentre.SPORT_CENTRE_ID">
+                {{ sportCentre.SPORT_CENTRE_NAME }} - {{ sportCentre.LOCATION }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-tag"></i> Pista</label>
+            <select class="form-select" id="matchPitch">
+              <option *ngFor="let pitch of pitches" [value]="pitch.PITCH_ID">
+                {{ pitch.PITCH_NAME }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group price-group">
+            <label><i class="fas fa-euro-sign"></i> Precio Partido</label>
+            <input type="number" id="matchPrice" class="form-control" [value]="precioSugerido" readonly>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="createMatch(selectedTeamId!)">
+          <i class="fas fa-check"></i> Crear Partido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

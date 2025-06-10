@@ -1,0 +1,180 @@
+<app-header></app-header>
+
+<div class="team-detail-container">
+  <!-- Sección de información del equipo -->
+  <div class="team-info-section">
+    <div class="section-header">
+      <h2>Información del Equipo</h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Botón de solicitudes para el capitán -->
+    <div *ngIf="userId === equipo.CAPTAIN" class="action-buttons">
+      <button class="action-btn request-btn" (click)="abrirModalSolicitudes()">
+        <i class="fas fa-user-plus"></i> Ver Solicitudes
+      </button>
+    </div>
+
+    <div class="team-info-card">
+      <div class="team-info-grid">
+        <div class="info-item">
+          <span class="info-label">Nombre</span>
+          <span class="info-value">{{ equipo.TEAM_NAME }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Dirección</span>
+          <span class="info-value">{{ equipo.TEAM_ADDRESS }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Tipo</span>
+          <span class="info-value">{{ equipo.TEAM_TYPE }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Capitán</span>
+          <span class="info-value">{{ nombreCapitan }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Fundación</span>
+          <span class="info-value">{{ equipo.CREATED | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de miembros del equipo -->
+  <div class="team-members-section">
+    <div class="section-header">
+      <h2>Miembros del Equipo</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="members-table-container">
+      <table class="members-table">
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Posiciones</th>
+            <th>Estadísticas</th>
+            <th *ngIf="userId === equipo.CAPTAIN">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let miembro of miembros">
+            <td class="player-cell">
+              <img [src]="miembro.PICTURE || 'assets/default-avatar.png'" alt="{{ miembro.USER_NAME }}" class="player-avatar">
+              <div class="player-info">
+                <span class="player-name">{{ miembro.USER_NAME }} {{ miembro.SURNAME }}</span>
+                <span class="player-age">{{ miembro.AGE }} años</span>
+              </div>
+            </td>
+            <td class="positions-cell">
+              <div class="position-badge primary">{{ miembro.PRIMARY_POSITION }}</div>
+              <div *ngIf="miembro.SECONDARY_POSITION" class="position-badge secondary">{{ miembro.SECONDARY_POSITION }}</div>
+            </td>
+            <td class="stats-cell">
+              <div class="stat-item">
+                <i class="fas fa-futbol"></i> {{ miembro.GOALS || 0 }} goles
+              </div>
+              <div class="stat-item">
+                <i class="fas fa-handshake"></i> {{ miembro.ASSISTS || 0 }} asistencias
+              </div>
+            </td>
+            <td *ngIf="userId === equipo.CAPTAIN" class="actions-cell">
+              <button class="action-btn remove-btn" (click)="abrirModalEliminar(miembro)">
+                <i class="fas fa-user-minus"></i> Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sección de alineación -->
+  <div class="lineup-section">
+    <div class="section-header">
+      <h2>Alineación del Equipo</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="field-container">
+      <div class="soccer-field">
+        <div class="player-marker" *ngFor="let jugador of jugadoresAlineados; let i = index"
+             [style.top]="jugador.top + 'px'"
+             [style.left]="jugador.left + 'px'"
+             (mousedown)="onDragStart($event, i)">
+          <div class="marker-circle"></div>
+          <div class="marker-number">{{i+1}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de solicitudes -->
+<div class="modal fade" id="modalSolicitudes" tabindex="-1" aria-labelledby="modalSolicitudesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Solicitudes de Unión</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="solicitudes.length > 0; else sinSolicitudes">
+          <div class="request-card" *ngFor="let solicitud of solicitudes">
+            <div class="request-info">
+              <div class="request-user">
+                <img [src]="solicitud.PICTURE || 'assets/default-avatar.png'" class="request-avatar">
+                <div>
+                  <h6>{{ solicitud.nombre }} {{ solicitud.apellido }}</h6>
+                  <p>{{ solicitud.correo }}</p>
+                  <small>{{ solicitud.nombre_usuario }}</small>
+                </div>
+              </div>
+              <div class="request-actions">
+                <button class="action-btn accept-btn" (click)="aceptarSolicitud(solicitud.USER_ID)">
+                  <i class="fas fa-check"></i> Aceptar
+                </button>
+                <button class="action-btn reject-btn" (click)="rechazarSolicitud(solicitud.USER_ID)">
+                  <i class="fas fa-times"></i> Rechazar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #sinSolicitudes>
+          <div class="no-requests">
+            <i class="fas fa-inbox"></i>
+            <p>No hay solicitudes pendientes</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal eliminar jugador -->
+<div class="modal fade" id="modalEliminarJugador" tabindex="-1" aria-labelledby="modalEliminarJugadorLabel"
+  aria-hidden="true" #modalEliminarJugador>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalEliminar()" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-confirmation">
+          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <p>¿Estás seguro de que quieres eliminar a <strong>{{ jugadorAEliminar?.USER_NAME }} {{ jugadorAEliminar?.SURNAME }}</strong> del equipo?</p>
+          <p class="text-muted">Esta acción no se puede deshacer.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="action-btn cancel-btn" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button type="button" class="action-btn confirm-btn" (click)="confirmarEliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
