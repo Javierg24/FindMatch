@@ -22,6 +22,8 @@ Este proyecto es la interfaz de usuario para la plataforma **FindMatch**, desarr
 npm install
 ng serve
 
+````
+
 Una vez compilado, navega a http://localhost:4200/.
 La aplicación se recarga automáticamente si se editan los archivos fuente.
 
