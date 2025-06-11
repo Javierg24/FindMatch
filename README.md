@@ -69,6 +69,7 @@ src/app/
 └── app.component.html         # Componente raíz
 
 🧩 Funcionalidades
+
 🔐 Autenticación
 Registro y login de usuarios
 
